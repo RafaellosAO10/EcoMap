@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS pontos_reciclagem (
     latitude REAL,
     longitude REAL,
     descricao TEXT,
+    status TEXT NOT NULL DEFAULT 'aprovado' CHECK (status IN ('pendente', 'aprovado')),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

@@ -26,4 +26,15 @@ const schema = fs.readFileSync(schemaPath, "utf-8");
 
 db.exec(schema);
 
+// Bancos criados antes da moderação não têm a coluna status.
+const colunasPontos = db.prepare("PRAGMA table_info(pontos_reciclagem)").all();
+
+if (!colunasPontos.some((coluna) => coluna.name === "status")) {
+  db.exec(`
+    ALTER TABLE pontos_reciclagem
+    ADD COLUMN status TEXT NOT NULL DEFAULT 'aprovado'
+    CHECK (status IN ('pendente', 'aprovado'))
+  `);
+}
+
 module.exports = db;

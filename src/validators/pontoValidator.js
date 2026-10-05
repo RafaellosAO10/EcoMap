@@ -1,5 +1,7 @@
 const { body, param, validationResult } = require("express-validator");
 
+const { materialExiste } = require("../models/pontoModel");
+
 const criarPontoValidation = [
   body("nome")
     .trim()
@@ -61,6 +63,14 @@ const criarPontoValidation = [
     .optional()
     .isArray()
     .withMessage("Materiais deve ser um array."),
+
+  body("materiais.*")
+    .isString()
+    .custom(async (slug) => {
+      if (!materialExiste(slug)) {
+        throw new Error("Material não encontrado.");
+      }
+    }),
 ];
 
 const idValidation = [

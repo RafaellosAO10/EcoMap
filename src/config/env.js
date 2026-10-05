@@ -9,6 +9,7 @@ const config = {
   databasePath:
     process.env.DATABASE_PATH ||
     path.join(__dirname, "../database/ecomap.db"),
+  apiKey: process.env.ECOMAP_API_KEY || "",
 };
 
 module.exports = config;

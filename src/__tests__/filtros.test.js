@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../database/connection');
+const config = require('../config/env');
 
 // Dados exclusivos deste arquivo: não dependem do seed e não interferem
 // nos pontos existentes. Tudo é removido no afterAll.
@@ -23,7 +24,10 @@ function novoPonto(dados) {
 }
 
 async function criarPonto(dados) {
-  const response = await request(app).post('/api/pontos').send(novoPonto(dados));
+  const response = await request(app)
+    .post('/api/pontos')
+    .set('X-API-Key', config.apiKey)
+    .send(novoPonto(dados));
 
   expect(response.status).toBe(201);
   idsCriados.push(response.body.data.id);
@@ -147,8 +151,10 @@ describe('Filtros de GET /api/pontos', () => {
     });
 
     // Filtrar por A não esconde que o ponto também aceita B.
-    expect(ponto.materiais).toContain(MATERIAL_A.nome);
-    expect(ponto.materiais).toContain(MATERIAL_B.nome);
+    const nomesMateriais = ponto.materiais.map((m) => m.nome);
+
+    expect(nomesMateriais).toContain(MATERIAL_A.nome);
+    expect(nomesMateriais).toContain(MATERIAL_B.nome);
   });
 });
 
@@ -156,6 +162,7 @@ describe('POST /api/pontos com campos opcionais', () => {
   it('deve criar um ponto apenas com os campos obrigatórios (horário é opcional)', async () => {
     const response = await request(app)
       .post('/api/pontos')
+      .set('X-API-Key', config.apiKey)
       .send(novoPonto({ nome: 'Ponto Sem Horario', cidade: CIDADE_BETA }));
 
     expect(response.status).toBe(201);

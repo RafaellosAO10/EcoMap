@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../database/connection');
+const config = require('../config/env');
 
 afterAll(async () => {
   if (db && typeof db.close === 'function') {
@@ -39,6 +40,7 @@ it('deve criar um novo ponto com sucesso (POST /api/pontos)', async () => {
 
     const response = await request(app)
       .post('/api/pontos')
+      .set('X-API-Key', config.apiKey)
       .send(novoPonto);
 
     expect(response.status).toBe(201);
@@ -56,6 +58,7 @@ it('deve criar um novo ponto com sucesso (POST /api/pontos)', async () => {
 
     const response = await request(app)
       .post('/api/pontos')
+      .set('X-API-Key', config.apiKey)
       .send(pontoInvalido);
 
     expect(response.status).toBe(400);
@@ -97,6 +100,7 @@ it('deve criar um novo ponto com sucesso (POST /api/pontos)', async () => {
 
     const response = await request(app)
       .put(`/api/pontos/${createdPontoId}`)
+      .set('X-API-Key', config.apiKey)
       .send(dadosAtualizados);
 
     expect(response.status).toBe(200);
@@ -123,6 +127,7 @@ it('deve criar um novo ponto com sucesso (POST /api/pontos)', async () => {
 
     const response = await request(app)
       .put('/api/pontos/999999')
+      .set('X-API-Key', config.apiKey)
       .send(dadosAtualizados);
 
     expect(response.status).toBe(404);
@@ -132,14 +137,16 @@ it('deve criar um novo ponto com sucesso (POST /api/pontos)', async () => {
     if (!createdPontoId) return;
 
     const response = await request(app)
-      .delete(`/api/pontos/${createdPontoId}`);
+      .delete(`/api/pontos/${createdPontoId}`)
+      .set('X-API-Key', config.apiKey);
 
     expect(response.status).toBe(200);
   });
 
   it('deve retornar 404 ao tentar excluir um ponto inexistente (DELETE /api/pontos/:id)', async () => {
     const response = await request(app)
-      .delete('/api/pontos/999999');
+      .delete('/api/pontos/999999')
+      .set('X-API-Key', config.apiKey);
 
     expect(response.status).toBe(404);
   });

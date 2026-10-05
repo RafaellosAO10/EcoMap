@@ -28,17 +28,11 @@ function normalizarDados(dados) {
 
 function listarTodos(filtros = {}) {
   let query = `
-    SELECT DISTINCT
-      p.*,
-      GROUP_CONCAT(m.nome) AS materiais
+    SELECT p.*
     FROM pontos_reciclagem p
-    LEFT JOIN ponto_materiais pm
-      ON pm.ponto_id = p.id
-    LEFT JOIN materiais m
-      ON m.id = pm.material_id
   `;
 
-  const conditions = [];
+  const conditions = ["p.status = 'aprovado'"];
   const params = {};
 
   if (filtros.cidade) {
@@ -88,13 +82,87 @@ function listarTodos(filtros = {}) {
   }
 
   query += `
-    GROUP BY p.id
     ORDER BY p.nome ASC
   `;
 
-  const statement = db.prepare(query);
+  const pontos = db.prepare(query).all(params);
 
-  return statement.all(params);
+  return anexarMateriais(pontos);
+}
+
+function anexarMateriais(pontos) {
+  if (pontos.length === 0) {
+    return pontos;
+  }
+
+  const ids = pontos.map((ponto) => ponto.id);
+  const linhas = db
+    .prepare(`
+      SELECT
+        pm.ponto_id,
+        m.id,
+        m.nome,
+        m.slug
+      FROM ponto_materiais pm
+      INNER JOIN materiais m
+        ON m.id = pm.material_id
+      WHERE pm.ponto_id IN (${ids.map(() => "?").join(", ")})
+    `)
+    .all(...ids);
+
+  const porPonto = new Map();
+
+  for (const { ponto_id, id, nome, slug } of linhas) {
+    if (!porPonto.has(ponto_id)) {
+      porPonto.set(ponto_id, []);
+    }
+
+    porPonto.get(ponto_id).push({ id, nome, slug });
+  }
+
+  return pontos.map((ponto) => ({
+    ...ponto,
+    materiais: (porPonto.get(ponto.id) || []).sort((a, b) =>
+      a.nome.localeCompare(b.nome, "pt-BR")
+    ),
+  }));
+}
+
+function listarPendentes() {
+  const pontos = db
+    .prepare(`
+      SELECT p.*
+      FROM pontos_reciclagem p
+      WHERE p.status = 'pendente'
+      ORDER BY p.created_at ASC
+    `)
+    .all();
+
+  return anexarMateriais(pontos);
+}
+
+function aprovar(id) {
+  const resultado = db
+    .prepare(`
+      UPDATE pontos_reciclagem
+      SET status = 'aprovado', updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `)
+    .run(id);
+
+  if (resultado.changes === 0) {
+    return null;
+  }
+
+  return buscarPorId(id);
+}
+
+function materialExiste(slug) {
+  return Boolean(
+    db
+      .prepare("SELECT 1 FROM materiais WHERE slug = ?")
+      .get(slug)
+  );
 }
 
 function listarMateriais() {
@@ -150,7 +218,7 @@ function buscarPorId(id) {
   };
 }
 
-function criar(dados) {
+function criar(dados, status) {
   const insert = db.prepare(`
     INSERT INTO pontos_reciclagem (
       nome,
@@ -164,7 +232,8 @@ function criar(dados) {
       horario_funcionamento,
       latitude,
       longitude,
-      descricao
+      descricao,
+      status
     )
     VALUES (
       @nome,
@@ -178,15 +247,18 @@ function criar(dados) {
       @horario_funcionamento,
       @latitude,
       @longitude,
-      @descricao
+      @descricao,
+      @status
     )
   `);
 
-  const resultado = insert.run(normalizarDados(dados));
+  return db.transaction(() => {
+    const resultado = insert.run({ ...normalizarDados(dados), status });
 
-  associarMateriais(resultado.lastInsertRowid, dados.materiais || []);
+    associarMateriais(resultado.lastInsertRowid, dados.materiais || []);
 
-  return buscarPorId(resultado.lastInsertRowid);
+    return buscarPorId(resultado.lastInsertRowid);
+  })();
 }
 
 function atualizar(id, dados) {
@@ -209,23 +281,27 @@ function atualizar(id, dados) {
     WHERE id = @id
   `);
 
-  const resultado = update.run({
-    ...normalizarDados(dados),
-    id,
-  });
+  return db.transaction(() => {
+    const resultado = update.run({
+      ...normalizarDados(dados),
+      id,
+    });
 
-  if (resultado.changes === 0) {
-    return null;
-  }
+    if (resultado.changes === 0) {
+      return null;
+    }
 
-  db.prepare(`
-    DELETE FROM ponto_materiais
-    WHERE ponto_id = ?
-  `).run(id);
+    if (dados.materiais !== undefined) {
+      db.prepare(`
+        DELETE FROM ponto_materiais
+        WHERE ponto_id = ?
+      `).run(id);
 
-  associarMateriais(id, dados.materiais || []);
+      associarMateriais(id, dados.materiais);
+    }
 
-  return buscarPorId(id);
+    return buscarPorId(id);
+  })();
 }
 
 function excluir(id) {
@@ -265,6 +341,9 @@ function associarMateriais(pontoId, materiais) {
 
 module.exports = {
   listarTodos,
+  listarPendentes,
+  aprovar,
+  materialExiste,
   listarMateriais,
   buscarPorId,
   criar,

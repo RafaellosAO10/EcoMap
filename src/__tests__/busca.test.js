@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../database/connection');
+const config = require('../config/env');
 const { normalizarTexto, escaparLike } = require('../utils/texto');
 
 // "zzbusca" torna os nomes exclusivos deste arquivo, sem depender do seed.
@@ -12,6 +13,7 @@ const idsCriados = [];
 async function criarPonto(dados) {
   const response = await request(app)
     .post('/api/pontos')
+    .set('X-API-Key', config.apiKey)
     .send({ endereco: 'Rua dos Testes', estado: 'SP', cidade: CIDADE, ...dados });
 
   expect(response.status).toBe(201);

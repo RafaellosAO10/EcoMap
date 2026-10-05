@@ -1,4 +1,5 @@
 const pontosService = require("../services/pontosService");
+const { situacaoChaveApi } = require("../middlewares/exigirChaveApi");
 
 // Parâmetros repetidos (?cidade=a&cidade=b) chegam como array e
 // quebrariam a consulta. Só texto é aceito; o resto é ignorado.
@@ -29,7 +30,10 @@ function buscarPorId(req, res, next) {
   try {
     const ponto = pontosService.buscarPonto(Number(req.params.id));
 
-    if (!ponto) {
+    const ocultoDoPublico =
+      ponto && ponto.status === "pendente" && situacaoChaveApi(req) !== "valida";
+
+    if (!ponto || ocultoDoPublico) {
       return res.status(404).json({
         success: false,
         message: "Ponto de reciclagem não encontrado.",
@@ -45,13 +49,31 @@ function buscarPorId(req, res, next) {
   }
 }
 
+function listarPendentes(req, res, next) {
+  try {
+    const pontos = pontosService.listarPendentes();
+
+    return res.status(200).json({
+      success: true,
+      data: pontos,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 function criar(req, res, next) {
   try {
-    const ponto = pontosService.criarPonto(req.body);
+    const comChaveValida = situacaoChaveApi(req) === "valida";
+    const status = comChaveValida ? "aprovado" : "pendente";
+
+    const ponto = pontosService.criarPonto(req.body, status);
 
     return res.status(201).json({
       success: true,
-      message: "Ponto de reciclagem criado com sucesso.",
+      message: comChaveValida
+        ? "Ponto de reciclagem criado com sucesso."
+        : "Ponto enviado e aguardando aprovação.",
       data: ponto,
     });
   } catch (error) {
@@ -105,10 +127,33 @@ function excluir(req, res, next) {
   }
 }
 
+function aprovar(req, res, next) {
+  try {
+    const ponto = pontosService.aprovarPonto(Number(req.params.id));
+
+    if (!ponto) {
+      return res.status(404).json({
+        success: false,
+        message: "Ponto de reciclagem não encontrado.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Ponto aprovado com sucesso.",
+      data: ponto,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   listar,
+  listarPendentes,
   buscarPorId,
   criar,
+  aprovar,
   atualizar,
   excluir,
 };

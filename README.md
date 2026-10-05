@@ -1,79 +1,67 @@
 # ♻️ EcoMap
 
- > Sistema web colaborativo para localização de pontos de reciclagem.
+> Sistema web colaborativo para localização de pontos de reciclagem.
 
- O **EcoMap** é um projeto desenvolvido para a disciplina **Open Source Contribution & Collaboration**, com foco em sustentabilidade e na aplicação de práticas de desenvolvimento colaborativo utilizando Git e GitHub.
+O **EcoMap** é um projeto desenvolvido para a disciplina **Open Source Contribution & Collaboration**, com foco em sustentabilidade e na aplicação de práticas de desenvolvimento colaborativo com Git e GitHub.
 
- ## 🌱 Sobre o projeto
+## 🌱 Sobre o projeto
 
- Encontrar locais adequados para descarte de materiais recicláveis nem sempre é uma tarefa simples. O **EcoMap** tem como objetivo facilitar a localização de pontos de reciclagem, permitindo que usuários consultem locais disponíveis e, futuramente, contribuam com novos pontos.
+Encontrar locais adequados para descarte de materiais recicláveis nem sempre é simples. O **EcoMap** facilita essa localização: qualquer pessoa consulta os pontos cadastrados, e novos pontos enviados pelo público passam por aprovação antes de aparecer na listagem.
 
- O sistema foi pensado para ser simples, acessível e colaborativo, incentivando o descarte correto de resíduos e contribuindo para práticas mais sustentáveis.
+## 🎯 Objetivos
 
- ## 🎯 Objetivos
+- Facilitar a localização de pontos de reciclagem.
+- Permitir a consulta de pontos por cidade, material e texto livre.
+- Permitir o envio de novos pontos, com moderação antes da publicação.
+- Informar os materiais aceitos em cada local.
+- Apresentar os pontos em um mapa (planejado).
+- Desenvolver o projeto com práticas de colaboração com Git e GitHub.
 
- - Facilitar a localização de pontos de reciclagem.
-- Permitir a consulta de pontos por cidade e tipo de material.
-- Permitir o cadastro de novos pontos de reciclagem.
-- Disponibilizar informações sobre os materiais aceitos em cada local.
-- Apresentar os pontos de reciclagem em um mapa.
-- Desenvolver o projeto utilizando práticas de colaboração com Git e GitHub.
-- Permitir que novos colaboradores possam compreender e contribuir com o projeto.
+## ✨ Funcionalidades
 
- ## ✨ Funcionalidades
+### ✅ Implementado
 
- ### ✅ Atualmente implementado
+- Servidor HTTP com Express e banco SQLite.
+- API REST para pontos de reciclagem e materiais.
+- Validação dos dados recebidos, com respostas de erro em JSON.
+- Chave de API para alterações e aprovação de pontos.
+- Moderação: pontos enviados sem chave ficam pendentes até aprovação.
+- Listagem na página inicial com nome, endereço, materiais, horário e distância.
+- Filtros por cidade e por material, com busca por nome ou material sem diferenciar maiúsculas, minúsculas e acentos.
+- Localização do usuário (opcional) para ordenar os pontos do mais próximo ao mais distante.
+- Contagem de pontos por material no filtro.
+- Testes automatizados da API e da lógica de geolocalização.
 
- - Estrutura inicial da aplicação Node.js.
-- Servidor HTTP utilizando Express.
-- Banco de dados SQLite.
-- Estrutura de pontos de reciclagem.
-- API REST para pontos de reciclagem.
-- Validação dos dados recebidos pela API.
-- Tratamento de erros.
-- Configuração de variáveis de ambiente.
-- Endpoint de verificação de saúde da aplicação.
-- Listagem de pontos de reciclagem na página inicial (nome, endereço, materiais aceitos e horário de funcionamento).
-- Filtros por cidade e por material, com indicação de carregamento, lista vazia e erro na consulta.
-- Busca por nome do ponto ou por material aceito, sem diferenciar maiúsculas de minúsculas nem acentos.
-- Localização do usuário (opcional): mostra a distância até cada ponto e ordena do mais próximo ao mais distante.
-- Filtro de material informa em quantos pontos cada material é aceito.
+### 🚧 Em desenvolvimento
 
- ### 🚧 Em desenvolvimento
-
- - Interface web completa.
-- Cadastro de pontos através da interface.
-- Edição de pontos.
-- Exclusão de pontos.
+- Cadastro de pontos pela interface web.
+- Edição e exclusão de pontos pela interface.
 - Mapa interativo.
-- Testes automatizados.
 - Melhorias de acessibilidade e responsividade.
+- Testes com banco separado do banco de desenvolvimento.
 
- ## 🛠️ Tecnologias
+## 🛠️ Tecnologias
 
- O projeto utiliza:
-
- | Tecnologia | Descrição |
+| Tecnologia | Descrição |
 | --- | --- |
 | **Node.js** | Ambiente de execução JavaScript. |
-| **Express** | Framework para criação do servidor e da API. |
-| **SQLite** | Banco de dados utilizado pela aplicação. |
+| **Express** | Framework para o servidor e a API. |
+| **SQLite** | Banco de dados da aplicação. |
 | **better-sqlite3** | Integração entre Node.js e SQLite. |
-| **Helmet** | Configuração de cabeçalhos de segurança HTTP. |
+| **express-validator** | Validação das requisições. |
+| **Helmet** | Cabeçalhos de segurança HTTP. |
 | **CORS** | Controle de acesso entre origens. |
-| **Nodemon** | Reinicialização automática do servidor durante o desenvolvimento. |
-| **Git** | Controle de versão. |
-| **GitHub** | Hospedagem do código e colaboração. |
+| **Jest e Supertest** | Testes automatizados. |
+| **Nodemon** | Reinicialização automática durante o desenvolvimento. |
+| **Git e GitHub** | Controle de versão e colaboração. |
 
 ## 📋 Pré-requisitos
 
- Antes de executar o projeto, é necessário possuir:
+- Node.js
+- npm
+- Git
 
- - Node.js instalado.
-- npm instalado.
-- Git instalado.
-
- Para verificar as versões instaladas:
+Para verificar as versões instaladas:
 
 ```
 node -v
@@ -81,308 +69,234 @@ npm -v
 git --version
 ```
 
- ## 🚀 Instalação
+## 🚀 Instalação
 
- ### 1\. Clone o repositório
+### 1. Clone o repositório
 
 ```
 git clone https://github.com/GustavoTalgatti/EcoMap.git
 ```
 
- ### 2\. Entre na pasta do projeto
+Para contribuir, faça um fork do repositório e clone o seu fork.
+
+### 2. Entre na pasta do projeto
 
 ```
 cd EcoMap
 ```
 
- ### 3\. Instale as dependências
+### 3. Instale as dependências
 
 ```
 npm install
 ```
 
- ## ⚙️ Configuração do ambiente
+## ⚙️ Configuração do ambiente
 
- O projeto utiliza variáveis de ambiente.
-
- Crie o arquivo `.env` a partir do exemplo:
-
- ### Windows
+Crie o arquivo `.env` a partir do exemplo:
 
 ```
-copy .env.example .env
+copy .env.example .env      # Windows
+cp .env.example .env        # Linux/macOS
 ```
 
- ### Linux/macOS
+As variáveis são:
 
-```
-cp .env.example .env
-```
+| Variável | Descrição | Padrão |
+| --- | --- | --- |
+| `PORT` | Porta do servidor. | `3000` |
+| `NODE_ENV` | Ambiente de execução. | `development` |
+| `DATABASE_PATH` | Caminho do arquivo SQLite. | `src/database/ecomap.db` |
+| `ECOMAP_API_KEY` | Chave usada para alterações e aprovação de pontos. | vazio |
 
- > **Importante:** o arquivo `.env` contém configurações utilizadas localmente e **não deve ser enviado ao GitHub**.
+> **Importante:** o `.env` contém configurações locais e **não deve ser enviado ao GitHub**. Sem `ECOMAP_API_KEY` definida, nenhuma alteração protegida é aceita.
 
- O arquivo `.env.example` deve ser mantido versionado para demonstrar quais variáveis são necessárias para executar o projeto.
+## ▶️ Executando o projeto
 
- ## ▶️ Executando o projeto
-
- Para iniciar o servidor em modo de desenvolvimento:
+Para iniciar em modo de desenvolvimento:
 
 ```
 npm run dev
 ```
 
- Por padrão, a aplicação estará disponível em:
+A aplicação fica disponível em `http://localhost:3000`.
 
-```
-http://localhost:3000
-```
-
- O banco de dados começa vazio. Para popular a listagem com materiais e pontos de exemplo, execute (uma vez, com o servidor parado ou em outro terminal):
+O banco começa vazio. Para popular com materiais e pontos de exemplo, execute uma vez:
 
 ```
 npm run db:seed
 ```
 
- ## 🔎 Verificando a aplicação
-
- A aplicação possui um endpoint de saúde:
+## 🔎 Verificando a aplicação
 
 ```
 GET /health
 ```
 
- Acesse:
+Deve retornar uma resposta indicando que a API está funcionando.
 
-```
-http://localhost:3000/health
-```
+## 🔌 API
 
- Deve ser retornada uma resposta indicando que a API está funcionando.
+A API usa o prefixo `/api`. Respostas de sucesso trazem `success: true` e, quando há dados, o campo `data`.
 
- ## 🔌 API
+### Formato dos pontos
 
- A API utiliza o prefixo:
+Cada ponto retorna seus campos e a lista de materiais aceitos em `materiais`, como array de objetos:
 
-```
-/api
-```
-
- ### Listar pontos
-
-```
-GET /api/pontos
-```
-
- ### Filtrar por cidade
-
-```
-GET /api/pontos?cidade=São Paulo
+```json
+{
+  "id": 1,
+  "nome": "Ponto de Reciclagem Central",
+  "cidade": "São Paulo",
+  "estado": "SP",
+  "status": "aprovado",
+  "materiais": [
+    { "id": 1, "nome": "Papel", "slug": "papel" }
+  ]
+}
 ```
 
- ### Filtrar por material
+### Autenticação
 
-O filtro usa o **slug** do material (ex.: `plastico`, `oleo-de-cozinha`). Os slugs disponíveis são retornados por `GET /api/materiais`.
+Consultas são públicas. Alterações exigem o cabeçalho `X-API-Key` com o valor de `ECOMAP_API_KEY`:
 
 ```
+X-API-Key: sua-chave
+```
+
+- Chave válida: a operação é aceita.
+- Chave ausente em operações protegidas: resposta 401.
+- Chave informada, mas incorreta: resposta 401, inclusive no envio público.
+
+A chave protege contra alterações de desconhecidos, mas não identifica quem fez cada alteração.
+
+### Moderação
+
+Pontos enviados **sem chave** são criados com `status: "pendente"`. Eles não aparecem na listagem pública nem em `GET /api/pontos/:id`. Quem tem a chave aprova o ponto, e ele passa a ser público. Pontos enviados **com chave válida** já são criados como `aprovado`.
+
+O campo `status` não pode ser definido pelo cliente: o servidor decide o valor.
+
+### Endpoints
+
+| Método | Rota | Chave | Descrição |
+| --- | --- | --- | --- |
+| `GET` | `/api/pontos` | não | Lista os pontos aprovados. Aceita os filtros abaixo. |
+| `GET` | `/api/pontos/:id` | não | Retorna um ponto aprovado. Pendentes respondem 404 ao público. |
+| `GET` | `/api/pontos/pendentes` | sim | Lista os pontos aguardando aprovação. |
+| `POST` | `/api/pontos` | opcional | Cria um ponto. Sem chave, fica pendente. |
+| `PATCH` | `/api/pontos/:id/aprovar` | sim | Aprova um ponto pendente. |
+| `PUT` | `/api/pontos/:id` | sim | Atualiza um ponto. Sem `materiais` no corpo, os materiais atuais são mantidos. |
+| `DELETE` | `/api/pontos/:id` | sim | Exclui um ponto. |
+| `GET` | `/api/materiais` | não | Lista os materiais com `total_pontos`. |
+
+### Filtros da listagem
+
+Combináveis entre si:
+
+```
+GET /api/pontos?cidade=Campinas
 GET /api/pontos?material=plastico
-```
-
- ### Buscar por nome ou material
-
- Procura o texto no nome do ponto ou no nome de um material aceito, ignorando maiúsculas e acentos (`sao joao` encontra `São João`).
-
-```
 GET /api/pontos?busca=vidro
-```
-
- ### Combinar filtros
-
-```
 GET /api/pontos?cidade=Campinas&material=vidro
-GET /api/pontos?busca=recicla&cidade=Campinas
 ```
 
- ### Listar materiais
+- `material` usa o **slug** do material (ex.: `plastico`, `oleo-de-cozinha`), disponível em `GET /api/materiais`.
+- `busca` procura no nome do ponto ou no nome de um material aceito, sem diferenciar maiúsculas e acentos (`sao joao` encontra `São João`).
 
-```
-GET /api/materiais
-```
-
- Cada material retorna `id`, `nome`, `slug` e `total_pontos` (quantidade de pontos que o aceitam).
-
- ### Buscar ponto por ID
-
-```
-GET /api/pontos/:id
-```
-
- ### Criar ponto
+### Exemplo de criação
 
 ```
 POST /api/pontos
+Content-Type: application/json
+
+{
+  "nome": "Ponto Exemplo",
+  "endereco": "Rua das Flores",
+  "numero": "75",
+  "cidade": "Campinas",
+  "estado": "SP",
+  "materiais": ["papel", "vidro"]
+}
 ```
 
- ### Atualizar ponto
+Os slugs de `materiais` precisam existir em `GET /api/materiais`; slugs desconhecidos retornam 400.
 
-```
-PUT /api/pontos/:id
-```
+## 📍 Localização do usuário
 
- ### Excluir ponto
-
-```
-DELETE /api/pontos/:id
-```
-
- ## 📍 Localização do usuário
-
- O botão **Usar minha localização** usa a API de geolocalização do navegador para calcular a distância em linha reta até os pontos que possuem latitude e longitude.
+O botão **Usar minha localização** usa a geolocalização do navegador para calcular a distância em linha reta até os pontos com latitude e longitude.
 
 - A posição é usada apenas no navegador e **nunca é enviada ao servidor**.
-- O navegador só permite geolocalização em `localhost` ou em páginas HTTPS.
-- Pontos sem coordenadas continuam na lista, mas ficam no final e sem distância.
+- O navegador só libera a geolocalização em `localhost` ou em páginas HTTPS.
+- Pontos sem coordenadas continuam na lista, no final, sem distância.
 
- ## 🗄️ Banco de dados
+## 🗄️ Banco de dados
 
- O **EcoMap** utiliza **SQLite**.
+O banco SQLite tem três estruturas:
 
- O banco possui estruturas relacionadas a:
+- `pontos_reciclagem`: dados dos pontos, incluindo `status` (`pendente` ou `aprovado`).
+- `materiais`: materiais recicláveis, com `nome` e `slug` únicos.
+- `ponto_materiais`: relação entre pontos e materiais.
 
- - Pontos de reciclagem.
-- Materiais recicláveis.
-- Relação entre pontos e materiais.
+A estrutura está em `src/database/schema.sql`. Bancos criados antes da moderação recebem a coluna `status` automaticamente ao iniciar, com todos os pontos existentes marcados como `aprovado`.
 
- A estrutura do banco está definida em:
+Os dados de exemplo ficam em `src/database/seed/seed.js`.
 
-```
-src/database/schema.sql
-```
-
- Os dados iniciais podem ser inseridos utilizando o seed disponível em:
-
-```
-src/database/seed/seed.js
-```
-
- ## 📁 Estrutura do projeto
-
-```
-EcoMap/
-│
-├── public/                 # Arquivos públicos da aplicação
-├── src/
-│   ├── config/             # Configurações
-│   ├── controllers/        # Controladores das requisições
-│   ├── database/           # Banco de dados e schema
-│   ├── middlewares/        # Middlewares da aplicação
-│   ├── models/             # Acesso e manipulação dos dados
-│   ├── routes/             # Rotas da API
-│   ├── services/           # Regras de negócio
-│   ├── utils/              # Funções utilitárias
-│   ├── validators/         # Validação de dados
-│   ├── app.js              # Configuração da aplicação Express
-│   └── server.js           # Inicialização do servidor
-│
-├── tests/                  # Testes automatizados
-├── views/                  # Páginas HTML
-├── .env.example            # Exemplo de configuração
-├── .gitignore              # Arquivos ignorados pelo Git
-├── package.json            # Dependências e scripts
-├── package-lock.json       # Versões exatas das dependências
-├── CONTRIBUTING.md         # Guia de contribuição
-└── README.md               # Documentação principal
-```
-
- ## 🔀 Fluxo de desenvolvimento
-
- O projeto utiliza GitHub para controle de versão e colaboração.
-
- As alterações devem seguir o seguinte fluxo:
-
-```
-Issue
-  ↓
-Branch
-  ↓
-Desenvolvimento
-  ↓
-Commit
-  ↓
-Push
-  ↓
-Pull Request
-  ↓
-Code Review
-  ↓
-Merge
-```
-
- > **Importante:** as alterações não devem ser realizadas diretamente na branch `main`.
-
- Para mais informações, consulte o arquivo `CONTRIBUTING.md`.
-
- ## 🤝 Colaboração
-
- O **EcoMap** foi desenvolvido como um projeto colaborativo.
-
- Cada funcionalidade deve ser associada a uma **Issue no GitHub**.
-
- Exemplo:
-
-```
-Issue #5
-   ↓
-feature/listagem-pontos
-   ↓
-implementação
-   ↓
-Pull Request
-   ↓
-revisão
-   ↓
-merge
-```
-
- Isso permite acompanhar o desenvolvimento e manter um histórico das contribuições realizadas por cada integrante.
-
- ## 🧪 Testes
-
- Os testes automatizados estão localizados no diretório:
-
-```
-tests/
-```
-
- Para executar os testes, utilize o script disponível no `package.json`:
+## 🧪 Testes
 
 ```
 npm test
 ```
 
- Caso o projeto ainda não possua testes implementados, esta funcionalidade será desenvolvida em uma Issue futura.
+O script define uma chave de teste (`ECOMAP_API_KEY=chave-de-teste`) e roda as suítes em `src/__tests__/`. Os testes criam dados com nomes exclusivos e os removem ao final.
 
- ## 📌 Status do projeto
+Os testes usam o mesmo banco do desenvolvimento por enquanto. Separar esse banco está na lista de melhorias.
 
- > 🚧 **Em desenvolvimento**
+## 📁 Estrutura do projeto
 
- O **EcoMap** está sendo desenvolvido de forma incremental através de Issues, branches e Pull Requests.
+```
+EcoMap/
+├── public/                 # Página estática: HTML, CSS e JavaScript do navegador
+│   ├── css/
+│   └── js/                 # app.js (listagem) e geo.js (distância)
+├── src/
+│   ├── config/             # Variáveis de ambiente
+│   ├── controllers/        # Recebem as requisições e montam as respostas
+│   ├── database/           # Conexão, schema.sql e seed
+│   ├── middlewares/        # Chave de API, erros e logs
+│   ├── models/             # Consultas ao banco
+│   ├── routes/             # Rotas da API
+│   ├── services/           # Regras de negócio
+│   ├── utils/              # Funções utilitárias
+│   ├── validators/         # Validação das requisições
+│   ├── __tests__/          # Testes automatizados
+│   ├── app.js              # Configuração da aplicação Express
+│   └── server.js           # Inicialização do servidor
+├── views/                  # index.html
+├── .env.example            # Modelo de configuração
+├── CONTRIBUTING.md         # Guia de contribuição
+└── README.md
+```
 
- ## 🌎 Impacto esperado
+## 🔀 Fluxo de desenvolvimento
 
- O projeto busca incentivar o descarte correto de resíduos e facilitar o acesso a informações sobre locais de reciclagem.
+O projeto usa GitHub para controle de versão e colaboração:
 
- Além do objetivo técnico, o **EcoMap** está alinhado ao tema de sustentabilidade, promovendo práticas que podem contribuir para a redução do descarte inadequado de materiais recicláveis.
+```
+Issue → Branch → Desenvolvimento → Commit → Push → Pull Request → Code Review → Merge
+```
 
- ## 👥 Equipe
+> **Importante:** não faça alterações diretamente na branch `main`. Cada alteração deve estar em uma branch ligada a uma Issue.
 
- Projeto desenvolvido pelos integrantes do grupo para a disciplina:
+O guia completo, com convenções de branches e commits, está em [CONTRIBUTING.md](CONTRIBUTING.md).
 
- **Open Source Contribution & Collaboration**
+## 👥 Equipe
 
- - **Universidade/Instituição:** UniFecaf
-- **Professor:** Robson Cardoso 
+Projeto desenvolvido pelos integrantes do grupo para a disciplina **Open Source Contribution & Collaboration**.
 
- ### Integrantes
+- **Instituição:** UniFecaf
+- **Professor:** Robson Cardoso
+
+### Integrantes
 
 - Cláudio José Rodrigues de Oliveira Junior
 - Felipe Pardinho Belarmino
@@ -392,9 +306,6 @@ npm test
 - Matheus Silva Dantas
 - Rickelmy Augusto Souza Pacheco
 
+## 📄 Licença
 
- ## 📄 Licença
-
- Este projeto ainda não possui uma licença definida.
-
- A licença será definida conforme a decisão do grupo e os requisitos da disciplina.
+O `package.json` declara a licença MIT, mas o arquivo `LICENSE` ainda não existe. A licença final deve ser confirmada pelo grupo antes de qualquer uso fora da disciplina.
